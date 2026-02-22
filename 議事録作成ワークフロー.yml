@@ -1,0 +1,370 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 議事録作成ワークフロー
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.7.8@6a3c5af18834ba94befb8085f66c0d5f0dac117feffd35488e90392cac99028d
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1769840879888-source-1769841127187-target
+      source: '1769840879888'
+      sourceHandle: source
+      target: '1769841127187'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1769841127187-source-1769936266750-target
+      source: '1769841127187'
+      sourceHandle: source
+      target: '1769936266750'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: http-request
+      id: 1769936266750-source-1769936306629-target
+      source: '1769936266750'
+      sourceHandle: source
+      target: '1769936306629'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: end
+      id: 1769936306629-source-1769841577701-target
+      source: '1769936306629'
+      sourceHandle: source
+      target: '1769841577701'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: ユーザー入力
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - audio
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          default: ''
+          hint: ''
+          label: 音声ファイルをアップロードしてください。
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: true
+          type: file
+          variable: file
+      height: 109
+      id: '1769840879888'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.0-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: d55a73e6-90e2-4435-8092-0a7eae560b96
+          role: system
+          text: '議事録を作成してください。形式は下記フォーマットに従ってください。
+
+
+            【議事内容】
+
+            1. [主要な議題 / トピック]
+
+            - 主な発言
+
+            - 決定事項
+
+
+            2. [次の議題 / トピック]
+
+            - 主な発言
+
+            - 決定事項
+
+
+            【次のアクション】
+
+            - タスク
+
+            - 担当者
+
+            - 期限'
+        - id: 98281a89-cf00-4337-a977-3283f70265e4
+          role: user
+          text: '{{#1769840879888.file#}}'
+        selected: true
+        title: 議事録作成
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1769841127187'
+      position:
+        x: 382
+        y: 282
+      positionAbsolute:
+        x: 382
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        outputs:
+        - value_selector:
+          - '1769841127187'
+          - text
+          value_type: string
+          variable: text
+        - value_selector:
+          - '1769936266750'
+          - text
+          value_type: string
+          variable: text_1
+        selected: false
+        title: 出力
+        type: end
+      height: 114
+      id: '1769841577701'
+      position:
+        x: 1284
+        y: 282
+      positionAbsolute:
+        x: 1284
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769841127187'
+          - text
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gemini-2.0-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: ec43c0d2-46a8-422a-b98c-af07ac9f4053
+          role: system
+          text: '{{#1769841127187.text#}}から、以下のJSON形式に変/換してtext形式で出力してください。JSON形式テキストのみを出力し、不要な装飾を排除すること。
+
+
+            {
+
+                "title": "{{#1769841127187.text#}}のタイトル {{#1769841127187.text#}}の日時",
+
+                "agenda": [
+
+                  {
+
+                    "number": 1,
+
+                    "topic": "{{#1769841127187.text#}}の1つ目の主要な議題",
+
+                    "remarks": ["{{#1769841127187.text#}}の主な発言",],
+
+                    "decisions": ["{{#1769841127187.text#}}の決定事項"]
+
+                  },
+
+                  {
+
+                    "number": 2,
+
+                    "topic": "{{#1769841127187.text#}}の2つ目の議題",
+
+                    "remarks": ["{{#1769841127187.text#}}の主な発言"],
+
+                    "decisions": ["{{#1769841127187.text#}}の決定事項"]
+
+                  }
+
+                ],
+
+                "nextActions": [
+
+                  {
+
+                    "task": "{{#1769841127187.text#}}のタスク内容",
+
+                    "assignee": "{{#1769841127187.text#}}の担当者名",
+
+                    "dueDate": "{{#1769841127187.text#}}の日時"
+
+                  }
+
+                ]
+
+              }'''
+        - id: 1429dd74-73a0-4dc2-86cb-34fd9beb1448
+          role: user
+          text: '{{#1769841127187.text#}}'
+        selected: false
+        structured_output_enabled: false
+        title: JSONデータ生成
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1769936266750'
+      position:
+        x: 681.5177977468155
+        y: 282
+      positionAbsolute:
+        x: 681.5177977468155
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-69
+            key: ''
+            type: text
+            value: '{{#1769936266750.text#}}'
+          type: json
+        headers: ''
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: HTTP リクエスト
+        type: http-request
+        url: https://script.google.com/macros/s/AKfycbwtMCkow3tkuGE2bgSZDdoGvgDnHFK3pCzRMmA2oQgjugj06i6dyDcn1VApMpUDC6gJDg/exec
+        variables: []
+      height: 186
+      id: '1769936306629'
+      position:
+        x: 983.1294494367039
+        y: 282
+      positionAbsolute:
+        x: 983.1294494367039
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    viewport:
+      x: -28.133415252684586
+      y: 91.85321203279199
+      zoom: 1.1486983549970353
+  rag_pipeline_variables: []
